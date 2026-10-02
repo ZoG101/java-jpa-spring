@@ -4,21 +4,20 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "tb_category")
-public class Category implements Serializable {
-    @Id 
+@Table(name = "tb_product")
+public class Product implements Serializable {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -26,7 +25,7 @@ public class Category implements Serializable {
     private String name;
 
     @Column(name = "description")
-    private  String description;
+    private String description;
 
     @Column(name = "price")
     private Double price;
@@ -35,28 +34,28 @@ public class Category implements Serializable {
     private String imgUrl;
 
     @Transient 
-    private Set<Product> products;
+    private Set<Category> categories;
 
-    public Category() {
-        this.products = new HashSet<>();
-    }
-
-    public Category(Long id, String name, String description, Double price, String imgUrl) {
+    public Product() {
+        this.categories = new HashSet<>();
+    } 
+    
+    public Product(Long id, String name, String description, Double price, String imgUrl) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.products = new HashSet<>();
+        this.categories = new HashSet<>();
     }
 
-    public Category(Long id, String name, String description, Double price, String imgUrl, Set<Product> products) {
+    public Product(Long id, String name, String description, Double price, String imgUrl, Set<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.products = products;
+        this.categories = categories;
     }
 
     public Long getId() {
@@ -79,8 +78,8 @@ public class Category implements Serializable {
         return imgUrl;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public Set<Category> getCategories() {
+        return categories;
     }
 
     public void setId(Long id) {
@@ -123,7 +122,7 @@ public class Category implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Category other = (Category) obj;
+        Product other = (Product) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -154,7 +153,9 @@ public class Category implements Serializable {
 
     @Override
     public String toString() {
-        return "Category [getId()=" + getId() + ", getName()=" + getName() + ", getDescription()=" + getDescription()
-                + ", getPrice()=" + getPrice() + ", getImgUrl()=" + getImgUrl() + "]";
+        return "Product [getId()=" + getId() + ", getName()=" + getName() + ", getDescription()=" + getDescription()
+                + ", getPrice()=" + getPrice() + "]";
     }
+
+    
 }

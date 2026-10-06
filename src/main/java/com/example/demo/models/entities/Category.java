@@ -13,7 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "tb_category")
@@ -34,7 +33,8 @@ public class Category implements Serializable {
     @Column(name = "imgUrl")
     private String imgUrl;
 
-    @Transient 
+    @ManyToMany(mappedBy = "categories")
+    @JsonIgnore 
     private Set<Product> products;
 
     public Category() {

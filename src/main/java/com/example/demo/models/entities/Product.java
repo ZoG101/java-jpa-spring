@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -33,6 +36,9 @@ public class Product implements Serializable {
     @Column(name = "imgUrl")
     private String imgUrl;
 
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> items;
+
     @ManyToMany
     @JoinTable(name = "tb_product_category",
     joinColumns = @JoinColumn(name = "product_id"),
@@ -41,6 +47,7 @@ public class Product implements Serializable {
 
     public Product() {
         this.categories = new HashSet<>();
+        this.items = new HashSet<>();
     } 
     
     public Product(Long id, String name, String description, Double price, String imgUrl) {
@@ -50,6 +57,7 @@ public class Product implements Serializable {
         this.price = price;
         this.imgUrl = imgUrl;
         this.categories = new HashSet<>();
+        this.items = new HashSet<>();
     }
 
     public Product(Long id, String name, String description, Double price, String imgUrl, Set<Category> categories) {
@@ -59,6 +67,7 @@ public class Product implements Serializable {
         this.price = price;
         this.imgUrl = imgUrl;
         this.categories = categories;
+        this.items = new HashSet<>();
     }
 
     public Long getId() {
@@ -83,6 +92,17 @@ public class Product implements Serializable {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    @JsonIgnore 
+    public Set<Order> getOrders() {
+        Set<Order> orders = new HashSet<>();
+
+        for (OrderItem orderItem : items) {
+            orders.add(orderItem.getOrder());
+        }
+
+        return orders;
     }
 
     public void setId(Long id) {
